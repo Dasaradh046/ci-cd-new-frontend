@@ -1,0 +1,178 @@
+{
+  "pipelineStages": [
+    {
+      "id": "stage_01",
+      "name": "Format Check",
+      "order": 1,
+      "description": "Run Prettier to ensure code formatting consistency across the codebase",
+      "tools": ["Prettier"],
+      "failureAction": "fail",
+      "estimatedDuration": "30s"
+    },
+    {
+      "id": "stage_02",
+      "name": "Lint",
+      "order": 2,
+      "description": "Run ESLint with TypeScript support for code quality and best practices",
+      "tools": ["ESLint", "TypeScript ESLint"],
+      "failureAction": "fail",
+      "estimatedDuration": "1m"
+    },
+    {
+      "id": "stage_03",
+      "name": "Type Check",
+      "order": 3,
+      "description": "Run TypeScript compiler in strict mode to catch type errors",
+      "tools": ["TypeScript"],
+      "failureAction": "fail",
+      "estimatedDuration": "1m"
+    },
+    {
+      "id": "stage_04",
+      "name": "Unit Tests",
+      "order": 4,
+      "description": "Run Jest with coverage threshold enforcement (80% minimum coverage)",
+      "tools": ["Jest", "React Testing Library"],
+      "failureAction": "fail",
+      "estimatedDuration": "3m"
+    },
+    {
+      "id": "stage_05",
+      "name": "SAST",
+      "order": 5,
+      "description": "Static Application Security Testing to identify security vulnerabilities in source code",
+      "tools": ["Semgrep"],
+      "failureAction": "fail",
+      "estimatedDuration": "2m"
+    },
+    {
+      "id": "stage_06",
+      "name": "Secret Scan",
+      "order": 6,
+      "description": "Scan for accidentally committed secrets, API keys, and credentials",
+      "tools": ["Gitleaks"],
+      "failureAction": "fail",
+      "estimatedDuration": "30s"
+    },
+    {
+      "id": "stage_07",
+      "name": "SCA",
+      "order": 7,
+      "description": "Software Composition Analysis for dependency vulnerability scanning",
+      "tools": ["Trivy", "Snyk"],
+      "failureAction": "fail",
+      "estimatedDuration": "2m"
+    },
+    {
+      "id": "stage_08",
+      "name": "Build",
+      "order": 8,
+      "description": "Run Next.js production build with optimized output",
+      "tools": ["Next.js"],
+      "failureAction": "fail",
+      "estimatedDuration": "3m"
+    },
+    {
+      "id": "stage_09",
+      "name": "Container Build",
+      "order": 9,
+      "description": "Build Docker image with multi-stage Dockerfile for minimal image size",
+      "tools": ["Docker", "BuildKit"],
+      "failureAction": "fail",
+      "estimatedDuration": "5m"
+    },
+    {
+      "id": "stage_10",
+      "name": "Image Scan",
+      "order": 10,
+      "description": "Scan container image for known vulnerabilities (CVEs)",
+      "tools": ["Trivy"],
+      "failureAction": "fail",
+      "estimatedDuration": "2m"
+    },
+    {
+      "id": "stage_11",
+      "name": "SBOM",
+      "order": 11,
+      "description": "Generate Software Bill of Materials for supply chain transparency",
+      "tools": ["CycloneDX"],
+      "failureAction": "warn",
+      "estimatedDuration": "1m"
+    },
+    {
+      "id": "stage_12",
+      "name": "E2E Tests",
+      "order": 12,
+      "description": "Run end-to-end tests against the built container",
+      "tools": ["Playwright"],
+      "failureAction": "fail",
+      "estimatedDuration": "5m"
+    },
+    {
+      "id": "stage_13",
+      "name": "Deploy",
+      "order": 13,
+      "description": "Deploy to target environment with manual approval for production",
+      "tools": ["GitHub Actions", "Kubernetes"],
+      "failureAction": "fail",
+      "estimatedDuration": "3m"
+    },
+    {
+      "id": "stage_14",
+      "name": "Post-Deploy",
+      "order": 14,
+      "description": "Run health checks and smoke tests after deployment",
+      "tools": ["Health Check API", "Smoke Tests"],
+      "failureAction": "fail",
+      "estimatedDuration": "1m"
+    }
+  ],
+  "securityTools": [
+    {
+      "name": "Semgrep",
+      "category": "SAST",
+      "description": "Static analysis tool for finding security vulnerabilities and code quality issues",
+      "documentationUrl": "https://semgrep.dev/docs/"
+    },
+    {
+      "name": "Gitleaks",
+      "category": "SecretScan",
+      "description": "Tool for detecting secrets, API keys, and passwords in git repositories",
+      "documentationUrl": "https://github.com/gitleaks/gitleaks"
+    },
+    {
+      "name": "Trivy",
+      "category": "SCA",
+      "description": "Comprehensive scanner for vulnerabilities in containers, filesystems, and git repositories",
+      "documentationUrl": "https://aquasecurity.github.io/trivy/"
+    },
+    {
+      "name": "Snyk",
+      "category": "SCA",
+      "description": "Developer-first security platform for finding and fixing vulnerabilities",
+      "documentationUrl": "https://docs.snyk.io/"
+    },
+    {
+      "name": "CycloneDX",
+      "category": "SBOM",
+      "description": "Lightweight SBOM standard for software supply chain transparency",
+      "documentationUrl": "https://cyclonedx.org/docs/"
+    },
+    {
+      "name": "Docker Scout",
+      "category": "ContainerScan",
+      "description": "Container image analysis and vulnerability scanning",
+      "documentationUrl": "https://docs.docker.com/scout/"
+    }
+  ],
+  "complianceFrameworks": [
+    "SOC 2 Type II",
+    "ISO 27001",
+    "GDPR",
+    "PCI DSS Level 1",
+    "HIPAA",
+    "NIST Cybersecurity Framework"
+  ],
+  "keyRotationPolicy": "RSA keys used for JWT signing must be rotated every 90 days. Key rotation must be performed during maintenance windows with zero downtime using key ID (kid) header for seamless transition. Previous keys must be retained for 7 days after rotation to allow token grace periods.",
+  "incidentResponseUrl": "https://security.company.com/incident-response"
+}

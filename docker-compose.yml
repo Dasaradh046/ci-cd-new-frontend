@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # ===========================================
+  # Frontend Application
+  # ===========================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_BASE_URL=http://api:8000
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - api
+    networks:
+      - devsecops-network
+    restart: unless-stopped
+
+  # ===========================================
+  # Backend API (FastAPI)
+  # ===========================================
+  api:
+    image: python:3.11-slim
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://devsecops:devsecops@db:5432/devsecops
+    volumes:
+      - ./backend:/app
+    working_dir: /app
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    depends_on:
+      - db
+    networks:
+      - devsecops-network
+    restart: unless-stopped
+
+  # ===========================================
+  # PostgreSQL Database
+  # ===========================================
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=devsecops
+      - POSTGRES_PASSWORD=devsecops
+      - POSTGRES_DB=devsecops
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - devsecops-network
+    restart: unless-stopped
+
+  # ===========================================
+  # Redis Cache
+  # ===========================================
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - devsecops-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  devsecops-network:
+    driver: bridge

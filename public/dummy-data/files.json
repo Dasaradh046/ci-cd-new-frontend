@@ -1,0 +1,80 @@
+{
+  "data": [
+    {
+      "id": "file_001",
+      "name": "security-report-q4-2024.pdf",
+      "type": "application/pdf",
+      "size": 2456789,
+      "url": "/files/security-report-q4-2024.pdf",
+      "thumbnailUrl": null,
+      "uploadedAt": "2024-12-15T10:30:00Z",
+      "updatedAt": "2024-12-15T10:30:00Z",
+      "ownerId": "usr_001",
+      "isPublic": false
+    },
+    {
+      "id": "file_002",
+      "name": "team-photo.jpg",
+      "type": "image/jpeg",
+      "size": 1234567,
+      "url": "/files/team-photo.jpg",
+      "thumbnailUrl": "/files/thumbnails/team-photo-thumb.jpg",
+      "uploadedAt": "2024-11-20T14:00:00Z",
+      "updatedAt": "2024-11-20T14:00:00Z",
+      "ownerId": "usr_002",
+      "isPublic": true
+    },
+    {
+      "id": "file_003",
+      "name": "ci-cd-pipeline-config.yaml",
+      "type": "text/yaml",
+      "size": 12345,
+      "url": "/files/ci-cd-pipeline-config.yaml",
+      "thumbnailUrl": null,
+      "uploadedAt": "2025-01-10T09:15:00Z",
+      "updatedAt": "2025-01-10T09:15:00Z",
+      "ownerId": "usr_001",
+      "isPublic": false
+    },
+    {
+      "id": "file_004",
+      "name": "architecture-diagram.png",
+      "type": "image/png",
+      "size": 567890,
+      "url": "/files/architecture-diagram.png",
+      "thumbnailUrl": "/files/thumbnails/architecture-diagram-thumb.png",
+      "uploadedAt": "2025-01-05T11:20:00Z",
+      "updatedAt": "2025-01-05T11:20:00Z",
+      "ownerId": "usr_003",
+      "isPublic": true
+    },
+    {
+      "id": "file_005",
+      "name": "incident-response-plan.docx",
+      "type": "application/docx",
+      "size": 345678,
+      "url": "/files/incident-response-plan.docx",
+      "thumbnailUrl": null,
+      "uploadedAt": "2024-10-01T08:00:00Z",
+      "updatedAt": "2024-10-01T08:00:00Z",
+      "ownerId": "usr_004",
+      "isPublic": false
+    },
+    {
+      "id": "file_006",
+      "name": "api-documentation.md",
+      "type": "text/markdown",
+      "size": 45678,
+      "url": "/files/api-documentation.md",
+      "thumbnailUrl": null,
+      "uploadedAt": "2025-01-12T16:45:00Z",
+      "updatedAt": "2025-01-12T16:45:00Z",
+      "ownerId": "usr_003",
+      "isPublic": true
+    }
+  ],
+  "total": 6,
+  "page": 1,
+  "pageSize": 10,
+  "totalPages": 1
+}

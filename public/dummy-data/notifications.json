@@ -1,0 +1,71 @@
+{
+  "data": [
+    {
+      "id": "notif_001",
+      "title": "New user registered",
+      "message": "A new user (guest@example.com) has registered and is pending verification.",
+      "type": "info",
+      "read": false,
+      "actionUrl": "/admin/users/usr_005",
+      "createdAt": "2025-01-15T09:00:00Z"
+    },
+    {
+      "id": "notif_002",
+      "title": "Security scan completed",
+      "message": "The weekly security scan completed successfully with no critical findings.",
+      "type": "success",
+      "read": false,
+      "actionUrl": null,
+      "createdAt": "2025-01-15T08:00:00Z"
+    },
+    {
+      "id": "notif_003",
+      "title": "Failed login attempt",
+      "message": "Multiple failed login attempts detected for user lisa.suspended@devsecops.com",
+      "type": "warning",
+      "read": true,
+      "actionUrl": "/admin/users/usr_007",
+      "createdAt": "2025-01-14T22:30:00Z"
+    },
+    {
+      "id": "notif_004",
+      "title": "Role updated",
+      "message": "Your role has been updated to MANAGER by administrator.",
+      "type": "info",
+      "read": true,
+      "actionUrl": null,
+      "createdAt": "2025-01-14T15:00:00Z"
+    },
+    {
+      "id": "notif_005",
+      "title": "File upload completed",
+      "message": "Your file 'api-documentation.md' has been uploaded successfully.",
+      "type": "success",
+      "read": true,
+      "actionUrl": "/files/file_006",
+      "createdAt": "2025-01-12T16:45:00Z"
+    },
+    {
+      "id": "notif_006",
+      "title": "System maintenance scheduled",
+      "message": "Scheduled maintenance will occur on January 20, 2025 from 02:00-04:00 UTC.",
+      "type": "warning",
+      "read": false,
+      "actionUrl": null,
+      "createdAt": "2025-01-10T10:00:00Z"
+    },
+    {
+      "id": "notif_007",
+      "title": "Critical vulnerability detected",
+      "message": "CVE-2024-1234 affects the lodash package. Please update to version 4.17.21 or later.",
+      "type": "error",
+      "read": false,
+      "actionUrl": "/docs/devsecops",
+      "createdAt": "2025-01-09T14:00:00Z"
+    }
+  ],
+  "total": 7,
+  "page": 1,
+  "pageSize": 10,
+  "totalPages": 1
+}

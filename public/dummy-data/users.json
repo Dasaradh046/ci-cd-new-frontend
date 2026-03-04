@@ -1,0 +1,205 @@
+{
+  "data": [
+    {
+      "id": "usr_001",
+      "email": "admin@devsecops.com",
+      "name": "Alex Johnson",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
+      "bio": "System Administrator with 10+ years of experience",
+      "role": {
+        "id": "role_001",
+        "name": "SUPER_ADMIN",
+        "description": "Full system access including RBAC management",
+        "permissions": [
+          { "id": "perm_001", "name": "users.create", "description": "Create new users", "resource": "users", "action": "create" },
+          { "id": "perm_002", "name": "users.read", "description": "View user details", "resource": "users", "action": "read" },
+          { "id": "perm_003", "name": "users.update", "description": "Update user information", "resource": "users", "action": "update" },
+          { "id": "perm_004", "name": "users.delete", "description": "Delete users", "resource": "users", "action": "delete" },
+          { "id": "perm_005", "name": "roles.create", "description": "Create new roles", "resource": "roles", "action": "create" },
+          { "id": "perm_006", "name": "roles.read", "description": "View roles", "resource": "roles", "action": "read" },
+          { "id": "perm_007", "name": "roles.update", "description": "Update roles", "resource": "roles", "action": "update" },
+          { "id": "perm_008", "name": "roles.delete", "description": "Delete roles", "resource": "roles", "action": "delete" },
+          { "id": "perm_009", "name": "permissions.read", "description": "View permissions", "resource": "permissions", "action": "read" },
+          { "id": "perm_010", "name": "permissions.assign", "description": "Assign permissions to roles", "resource": "permissions", "action": "assign" },
+          { "id": "perm_011", "name": "files.upload", "description": "Upload files", "resource": "files", "action": "create" },
+          { "id": "perm_012", "name": "files.read", "description": "View files", "resource": "files", "action": "read" },
+          { "id": "perm_013", "name": "files.delete", "description": "Delete files", "resource": "files", "action": "delete" },
+          { "id": "perm_014", "name": "settings.read", "description": "View settings", "resource": "settings", "action": "read" },
+          { "id": "perm_015", "name": "settings.update", "description": "Update settings", "resource": "settings", "action": "update" }
+        ],
+        "userCount": 1,
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-01-01T00:00:00Z"
+      },
+      "status": "active",
+      "emailVerified": true,
+      "lastLoginAt": "2025-01-15T10:30:00Z",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2025-01-15T10:30:00Z"
+    },
+    {
+      "id": "usr_002",
+      "email": "sarah.manager@devsecops.com",
+      "name": "Sarah Williams",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+      "bio": "Engineering Manager leading the DevSecOps team",
+      "role": {
+        "id": "role_003",
+        "name": "MANAGER",
+        "description": "Team management capabilities with limited administrative functions",
+        "permissions": [
+          { "id": "perm_002", "name": "users.read", "description": "View user details", "resource": "users", "action": "read" },
+          { "id": "perm_003", "name": "users.update", "description": "Update user information", "resource": "users", "action": "update" },
+          { "id": "perm_006", "name": "roles.read", "description": "View roles", "resource": "roles", "action": "read" },
+          { "id": "perm_011", "name": "files.upload", "description": "Upload files", "resource": "files", "action": "create" },
+          { "id": "perm_012", "name": "files.read", "description": "View files", "resource": "files", "action": "read" },
+          { "id": "perm_014", "name": "settings.read", "description": "View settings", "resource": "settings", "action": "read" }
+        ],
+        "userCount": 3,
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-01-01T00:00:00Z"
+      },
+      "status": "active",
+      "emailVerified": true,
+      "lastLoginAt": "2025-01-14T15:45:00Z",
+      "createdAt": "2024-02-15T00:00:00Z",
+      "updatedAt": "2025-01-14T15:45:00Z"
+    },
+    {
+      "id": "usr_003",
+      "email": "john.developer@devsecops.com",
+      "name": "John Smith",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+      "bio": "Full-stack developer passionate about security",
+      "role": {
+        "id": "role_004",
+        "name": "USER",
+        "description": "Standard authenticated user with access to personal resources",
+        "permissions": [
+          { "id": "perm_011", "name": "files.upload", "description": "Upload files", "resource": "files", "action": "create" },
+          { "id": "perm_012", "name": "files.read", "description": "View files", "resource": "files", "action": "read" },
+          { "id": "perm_014", "name": "settings.read", "description": "View settings", "resource": "settings", "action": "read" }
+        ],
+        "userCount": 15,
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-01-01T00:00:00Z"
+      },
+      "status": "active",
+      "emailVerified": true,
+      "lastLoginAt": "2025-01-13T09:20:00Z",
+      "createdAt": "2024-03-20T00:00:00Z",
+      "updatedAt": "2025-01-13T09:20:00Z"
+    },
+    {
+      "id": "usr_004",
+      "email": "emily.admin@devsecops.com",
+      "name": "Emily Davis",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
+      "bio": "IT Administrator specializing in access management",
+      "role": {
+        "id": "role_002",
+        "name": "ADMIN",
+        "description": "Administrative access to user management and content moderation",
+        "permissions": [
+          { "id": "perm_001", "name": "users.create", "description": "Create new users", "resource": "users", "action": "create" },
+          { "id": "perm_002", "name": "users.read", "description": "View user details", "resource": "users", "action": "read" },
+          { "id": "perm_003", "name": "users.update", "description": "Update user information", "resource": "users", "action": "update" },
+          { "id": "perm_004", "name": "users.delete", "description": "Delete users", "resource": "users", "action": "delete" },
+          { "id": "perm_006", "name": "roles.read", "description": "View roles", "resource": "roles", "action": "read" },
+          { "id": "perm_011", "name": "files.upload", "description": "Upload files", "resource": "files", "action": "create" },
+          { "id": "perm_012", "name": "files.read", "description": "View files", "resource": "files", "action": "read" },
+          { "id": "perm_013", "name": "files.delete", "description": "Delete files", "resource": "files", "action": "delete" }
+        ],
+        "userCount": 2,
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-01-01T00:00:00Z"
+      },
+      "status": "active",
+      "emailVerified": true,
+      "lastLoginAt": "2025-01-15T08:00:00Z",
+      "createdAt": "2024-04-10T00:00:00Z",
+      "updatedAt": "2025-01-15T08:00:00Z"
+    },
+    {
+      "id": "usr_005",
+      "email": "guest@example.com",
+      "name": "Guest User",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Guest",
+      "bio": "",
+      "role": {
+        "id": "role_005",
+        "name": "GUEST",
+        "description": "Limited read-only access to public resources",
+        "permissions": [
+          { "id": "perm_002", "name": "users.read", "description": "View user details", "resource": "users", "action": "read" },
+          { "id": "perm_012", "name": "files.read", "description": "View files", "resource": "files", "action": "read" }
+        ],
+        "userCount": 5,
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-01-01T00:00:00Z"
+      },
+      "status": "pending_verification",
+      "emailVerified": false,
+      "lastLoginAt": null,
+      "createdAt": "2025-01-10T00:00:00Z",
+      "updatedAt": "2025-01-10T00:00:00Z"
+    },
+    {
+      "id": "usr_006",
+      "email": "michael.chen@devsecops.com",
+      "name": "Michael Chen",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
+      "bio": "Security Engineer focused on CI/CD pipeline security",
+      "role": {
+        "id": "role_003",
+        "name": "MANAGER",
+        "description": "Team management capabilities with limited administrative functions",
+        "permissions": [
+          { "id": "perm_002", "name": "users.read", "description": "View user details", "resource": "users", "action": "read" },
+          { "id": "perm_003", "name": "users.update", "description": "Update user information", "resource": "users", "action": "update" },
+          { "id": "perm_006", "name": "roles.read", "description": "View roles", "resource": "roles", "action": "read" },
+          { "id": "perm_011", "name": "files.upload", "description": "Upload files", "resource": "files", "action": "create" },
+          { "id": "perm_012", "name": "files.read", "description": "View files", "resource": "files", "action": "read" },
+          { "id": "perm_014", "name": "settings.read", "description": "View settings", "resource": "settings", "action": "read" }
+        ],
+        "userCount": 3,
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-01-01T00:00:00Z"
+      },
+      "status": "active",
+      "emailVerified": true,
+      "lastLoginAt": "2025-01-12T14:30:00Z",
+      "createdAt": "2024-05-05T00:00:00Z",
+      "updatedAt": "2025-01-12T14:30:00Z"
+    },
+    {
+      "id": "usr_007",
+      "email": "lisa.suspended@devsecops.com",
+      "name": "Lisa Thompson",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa",
+      "bio": "Former team member",
+      "role": {
+        "id": "role_004",
+        "name": "USER",
+        "description": "Standard authenticated user with access to personal resources",
+        "permissions": [
+          { "id": "perm_011", "name": "files.upload", "description": "Upload files", "resource": "files", "action": "create" },
+          { "id": "perm_012", "name": "files.read", "description": "View files", "resource": "files", "action": "read" },
+          { "id": "perm_014", "name": "settings.read", "description": "View settings", "resource": "settings", "action": "read" }
+        ],
+        "userCount": 15,
+        "createdAt": "2024-01-01T00:00:00Z",
+        "updatedAt": "2024-01-01T00:00:00Z"
+      },
+      "status": "suspended",
+      "emailVerified": true,
+      "lastLoginAt": "2024-12-01T10:00:00Z",
+      "createdAt": "2024-06-15T00:00:00Z",
+      "updatedAt": "2024-12-15T00:00:00Z"
+    }
+  ],
+  "total": 7,
+  "page": 1,
+  "pageSize": 10,
+  "totalPages": 1
+}

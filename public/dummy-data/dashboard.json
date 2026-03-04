@@ -1,0 +1,49 @@
+{
+  "totalUsers": 27,
+  "activeUsers": 22,
+  "totalFiles": 156,
+  "storageUsed": 4580000000,
+  "storageLimit": 10000000000,
+  "recentActivity": [
+    {
+      "id": "act_001",
+      "type": "user_login",
+      "description": "User logged in successfully",
+      "userId": "usr_001",
+      "userName": "Alex Johnson",
+      "timestamp": "2025-01-15T10:30:00Z"
+    },
+    {
+      "id": "act_002",
+      "type": "file_upload",
+      "description": "Uploaded 'api-documentation.md'",
+      "userId": "usr_003",
+      "userName": "John Smith",
+      "timestamp": "2025-01-12T16:45:00Z"
+    },
+    {
+      "id": "act_003",
+      "type": "user_created",
+      "description": "New user account created",
+      "userId": "usr_005",
+      "userName": "Guest User",
+      "timestamp": "2025-01-10T00:00:00Z"
+    },
+    {
+      "id": "act_004",
+      "type": "role_changed",
+      "description": "Role changed from USER to MANAGER",
+      "userId": "usr_006",
+      "userName": "Michael Chen",
+      "timestamp": "2025-01-08T11:00:00Z"
+    },
+    {
+      "id": "act_005",
+      "type": "user_login",
+      "description": "User logged in successfully",
+      "userId": "usr_002",
+      "userName": "Sarah Williams",
+      "timestamp": "2025-01-14T15:45:00Z"
+    }
+  ]
+}
