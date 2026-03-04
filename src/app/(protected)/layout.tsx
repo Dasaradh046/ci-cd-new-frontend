@@ -12,43 +12,7 @@ import { AppSidebar } from '@/components/layout/app-sidebar';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from '@/components/ui/breadcrumb';
-
-// Dynamic breadcrumb based on route
-function DynamicBreadcrumb({ pathname }: { pathname: string }) {
-  const segments = pathname.split('/').filter(Boolean);
-  const currentPath = segments[segments.length - 1] || 'dashboard';
-  
-  const breadcrumbMap: Record<string, string> = {
-    dashboard: 'Dashboard',
-    profile: 'Profile',
-    settings: 'Settings',
-    notifications: 'Notifications',
-    files: 'Files',
-    docs: 'Documentation',
-    users: 'User Management',
-    rbac: 'RBAC Management',
-    permissions: 'Permission Matrix',
-    admin: 'Admin',
-  };
-  
-  const pageName = breadcrumbMap[currentPath] || currentPath.charAt(0).toUpperCase() + currentPath.slice(1);
-  
-  return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbPage>{pageName}</BreadcrumbPage>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
-  );
-}
+import { PageBreadcrumb } from '@/components/shared/breadcrumb-nav';
 
 // Loading fallback component
 function LoadingFallback() {
@@ -89,8 +53,8 @@ export default function ProtectedLayout({
           <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            <Suspense fallback={<BreadcrumbPage>Dashboard</BreadcrumbPage>}>
-              <DynamicBreadcrumb pathname={pathname} />
+            <Suspense fallback={<span>Dashboard</span>}>
+              <PageBreadcrumb compact />
             </Suspense>
             <div className="ml-auto flex items-center gap-2">
               <ThemeToggle />
