@@ -3,124 +3,134 @@ name: Tier-3 DevSecOps CI/CD Pipeline
 on:
   push:
     branches: [main, develop]
+
   pull_request:
     branches: [main]
+
   release:
     types: [published]
 
 env:
-  NODE_VERSION: '20'
-  BUN_VERSION: 'latest'
+  NODE_VERSION: 24
+  PNPM_VERSION: 10
 
+# ==========================================================
+# Stage 1: Code Quality
+# ==========================================================
 jobs:
-  # ===========================================
-  # Stage 1: Code Quality & Formatting
-  # ===========================================
-  format-check:
-    name: Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+  format-check:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          bun-version: ${{ env.BUN_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - name: Check formatting
-        run: bun run lint
+      - name: Run ESLint
+        run: pnpm lint
 
-  # ===========================================
-  # Stage 2: Type Checking
-  # ===========================================
+
+# ==========================================================
+# Stage 2: Type Checking
+# ==========================================================
   type-check:
-    name: TypeScript Type Check
+    name: TypeScript Check
     runs-on: ubuntu-latest
     needs: format-check
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: actions/setup-node@v4
         with:
-          bun-version: ${{ env.BUN_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
-      - name: Type check
-        run: bun run type-check
+      - run: pnpm install --frozen-lockfile
 
-  # ===========================================
-  # Stage 3: Unit Tests
-  # ===========================================
+      - run: pnpm type-check
+
+
+# ==========================================================
+# Stage 3: Unit Tests
+# ==========================================================
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
     needs: type-check
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: actions/setup-node@v4
         with:
-          bun-version: ${{ env.BUN_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
-      - name: Run unit tests
-        run: bun run test
+      - run: pnpm install --frozen-lockfile
 
-      - name: Upload coverage report
+      - name: Run tests
+        run: pnpm test
+
+      - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
           files: ./coverage/lcov.info
           fail_ci_if_error: false
 
-  # ===========================================
-  # Stage 4: SAST - Static Application Security Testing
-  # ===========================================
+
+# ==========================================================
+# Stage 4: SAST (Semgrep)
+# ==========================================================
   sast:
-    name: SAST (Semgrep)
+    name: Static Security Scan
     runs-on: ubuntu-latest
     needs: format-check
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Run Semgrep
         uses: returntocorp/semgrep-action@v1
         with:
-          config: >-
+          config: >
             p/security-audit
             p/secrets
             p/owasp-top-ten
-          outputFormat: sarif
-          generateSarif: "1"
 
-      - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: semgrep.sarif
 
-  # ===========================================
-  # Stage 5: Secret Scanning
-  # ===========================================
+# ==========================================================
+# Stage 5: Secret Scanning
+# ==========================================================
   secret-scan:
-    name: Secret Scanning (Gitleaks)
+    name: Secret Scan (Gitleaks)
     runs-on: ubuntu-latest
     needs: format-check
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -129,229 +139,197 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # ===========================================
-  # Stage 6: SCA - Software Composition Analysis
-  # ===========================================
+
+# ==========================================================
+# Stage 6: Dependency Vulnerability Scan (SCA)
+# ==========================================================
   sca:
-    name: SCA (Trivy)
+    name: Dependency Scan (Trivy)
     runs-on: ubuntu-latest
     needs: format-check
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+      - name: Run Trivy FS Scan
+        uses: aquasecurity/trivy-action@0.20.0
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: 1
 
-      - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
 
-  # ===========================================
-  # Stage 7: Build
-  # ===========================================
+# ==========================================================
+# Stage 7: Build Application
+# ==========================================================
   build:
-    name: Build Application
+    name: Build Next.js
     runs-on: ubuntu-latest
     needs: [unit-tests, sast, secret-scan, sca]
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: actions/setup-node@v4
         with:
-          bun-version: ${{ env.BUN_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
-      - name: Build application
-        run: bun run build
+      - run: pnpm install --frozen-lockfile
 
-      - name: Upload build artifacts
+      - run: pnpm build
+
+      - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
-          path: .next/
-          retention-days: 7
+          name: next-build
+          path: .next
 
-  # ===========================================
-  # Stage 8: Container Build
-  # ===========================================
+
+# ==========================================================
+# Stage 8: Docker Build
+# ==========================================================
   container-build:
-    name: Build Container Image
+    name: Build Docker Image
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' || github.event_name == 'release'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    if: github.event_name != 'pull_request'
 
-      - name: Set up Docker Buildx
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to GitHub Container Registry
+      - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}
-          tags: |
-            type=sha,prefix=
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-
-      - name: Build and push Docker image
+      - name: Build & Push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ===========================================
-  # Stage 9: Container Image Scan
-  # ===========================================
+
+# ==========================================================
+# Stage 9: Container Security Scan
+# ==========================================================
   container-scan:
-    name: Scan Container Image
+    name: Container Scan (Trivy)
     runs-on: ubuntu-latest
     needs: container-build
-    if: github.event_name == 'push' || github.event_name == 'release'
+
     steps:
-      - name: Run Trivy container scan
-        uses: aquasecurity/trivy-action@master
+      - name: Scan image
+        uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: 'ghcr.io/${{ github.repository }}:${{ github.sha }}'
-          format: 'sarif'
-          output: 'trivy-container-results.sarif'
-          severity: 'CRITICAL,HIGH'
+          image-ref: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          severity: CRITICAL,HIGH
+          exit-code: 1
 
-      - name: Upload container scan results
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-container-results.sarif'
 
-  # ===========================================
-  # Stage 10: SBOM Generation
-  # ===========================================
+# ==========================================================
+# Stage 10: SBOM
+# ==========================================================
   sbom:
     name: Generate SBOM
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' || github.event_name == 'release'
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
           format: spdx-json
           output-file: sbom.spdx.json
-          artifact-name: sbom
 
-      - name: Upload SBOM
-        uses: actions/upload-artifact@v4
-        with:
-          name: sbom
-          path: sbom.spdx.json
 
-  # ===========================================
-  # Stage 11: E2E Tests
-  # ===========================================
+# ==========================================================
+# Stage 11: E2E Tests
+# ==========================================================
   e2e-tests:
-    name: E2E Tests
+    name: Playwright Tests
     runs-on: ubuntu-latest
     needs: container-build
-    if: github.event_name == 'push' || github.event_name == 'release'
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: actions/setup-node@v4
         with:
-          bun-version: ${{ env.BUN_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
-      - name: Install Playwright browsers
-        run: bunx playwright install --with-deps chromium
+      - run: pnpm install
 
-      - name: Run E2E tests
-        run: bun run test:e2e
-        env:
-          CI: true
+      - run: pnpm exec playwright install --with-deps
 
-      - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
+      - run: pnpm test:e2e
+
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
           path: playwright-report/
-          retention-days: 30
 
-  # ===========================================
-  # Stage 12: Deploy to Staging
-  # ===========================================
+
+# ==========================================================
+# Stage 12: Deploy Staging
+# ==========================================================
   deploy-staging:
-    name: Deploy to Staging
+    name: Deploy Staging
     runs-on: ubuntu-latest
-    needs: [container-scan, sbom, e2e-tests]
+    needs: [container-scan, e2e-tests]
     if: github.ref == 'refs/heads/develop'
-    environment:
-      name: staging
-      url: https://staging.example.com
-    steps:
-      - name: Deploy to staging
-        run: |
-          echo "Deploying to staging environment..."
-          # Add deployment commands here
 
-  # ===========================================
-  # Stage 13: Deploy to Production
-  # ===========================================
+    steps:
+      - name: Deploy
+        run: echo "Deploying to staging..."
+
+
+# ==========================================================
+# Stage 13: Deploy Production
+# ==========================================================
   deploy-production:
-    name: Deploy to Production
+    name: Deploy Production
     runs-on: ubuntu-latest
-    needs: [container-scan, sbom, e2e-tests]
+    needs: [container-scan, e2e-tests]
     if: github.event_name == 'release'
-    environment:
-      name: production
-      url: https://example.com
-    steps:
-      - name: Deploy to production
-        run: |
-          echo "Deploying to production environment..."
-          # Add deployment commands here
 
-  # ===========================================
-  # Stage 14: Post-Deploy Health Check
-  # ===========================================
+    steps:
+      - name: Deploy
+        run: echo "Deploying to production..."
+
+
+# ==========================================================
+# Stage 14: Post Deployment Health Check
+# ==========================================================
   health-check:
     name: Health Check
     runs-on: ubuntu-latest
     needs: [deploy-staging, deploy-production]
-    if: always() && (needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
+    if: always()
+
     steps:
-      - name: Run health checks
+      - name: Check Service
         run: |
-          echo "Running health checks..."
-          # Add health check commands here
+          echo "Running health check..."

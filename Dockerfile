@@ -1,72 +1,119 @@
-# ===========================================
-# DevSecOps Platform - Multi-Stage Dockerfile
+# ==========================================================
+# DevSecOps Platform - Optimized Multi-Stage Dockerfile
+# Next.js + PNPM
 # Tier-3 CI/CD Pipeline Ready
-# ===========================================
+#
+# Goals:
+# - Small Docker Image
+# - Fast builds with caching
+# - Secure non-root runtime
+# - Production optimized
+# - Works for local dev and production
+# ==========================================================
 
-# Stage 1: Dependencies
-FROM node:20-alpine AS deps
+
+# ==========================================================
+# Stage 1 — Base Image
+# Common base used across stages
+# ==========================================================
+FROM node:24-alpine AS base
+
+# Install libc compatibility (required by some node packages)
+RUN apk add --no-cache libc6-compat
+
+# Enable corepack (Node package manager manager)
+# This allows us to use pnpm without installing globally
+RUN corepack enable
+
 WORKDIR /app
 
-# Install bun
-RUN npm install -g bun
 
-# Copy package files
-COPY package.json bun.lock* ./
 
-# Install dependencies
-RUN bun install --frozen-lockfile
+# ==========================================================
+# Stage 2 — Dependencies
+# Install node modules with caching
+# ==========================================================
+FROM base AS deps
 
-# Stage 2: Builder
-FROM node:20-alpine AS builder
+# Copy only dependency files first (better caching)
+COPY package.json pnpm-lock.yaml* ./
+
+# Install dependencies using pnpm
+# --frozen-lockfile ensures deterministic installs
+RUN pnpm install --frozen-lockfile
+
+
+
+# ==========================================================
+# Stage 3 — Builder
+# Build the Next.js application
+# ==========================================================
+FROM base AS builder
+
 WORKDIR /app
 
-# Install bun
-RUN npm install -g bun
-
-# Copy dependencies from deps stage
+# Copy dependencies from previous stage
 COPY --from=deps /app/node_modules ./node_modules
+
+# Copy project files
 COPY . .
 
-# Set environment variables for build
+# Disable Next.js telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Set production environment
 ENV NODE_ENV=production
 
-# Build the application
-RUN bun run build
+# Build Next.js application
+# Requires next.config.js with:
+# output: "standalone"
+RUN pnpm build
 
-# Stage 3: Runner (Production)
-FROM node:20-alpine AS runner
+
+
+# ==========================================================
+# Stage 4 — Production Runtime
+# Minimal and secure production image
+# ==========================================================
+FROM node:24-alpine AS runner
+
 WORKDIR /app
 
-# Set environment variables
+# Environment configuration
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
-# Create non-root user for security
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+# Install minimal runtime dependencies
+RUN apk add --no-cache libc6-compat
 
-# Copy necessary files from builder
-COPY --from=builder /app/public ./public
+# Create non-root user (security best practice)
+RUN addgroup -S nodejs -g 1001 \
+    && adduser -S nextjs -u 1001 -G nodejs
+
+# Copy standalone Next.js server
 COPY --from=builder /app/.next/standalone ./
+
+# Copy static assets
 COPY --from=builder /app/.next/static ./.next/static
 
-# Set correct ownership
+# Copy public files
+COPY --from=builder /app/public ./public
+
+# Set correct permissions
 RUN chown -R nextjs:nodejs /app
 
 # Switch to non-root user
 USER nextjs
 
-# Expose port
+# Expose Next.js port
 EXPOSE 3000
 
-# Set port
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+# Container health check
+# Useful for Kubernetes / Docker / CI/CD health monitoring
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --spider -q http://localhost:3000/api/health || exit 1
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
-
-# Start the application
+# Start Next.js standalone server
 CMD ["node", "server.js"]

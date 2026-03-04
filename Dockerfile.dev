@@ -1,0 +1,28 @@
+# =============================================
+# Next.js Development Dockerfile
+# Used for local development with hot reload
+# =============================================
+
+FROM node:24-alpine
+
+# Enable pnpm via corepack
+RUN corepack enable
+
+WORKDIR /app
+
+# Install dependencies first for caching
+COPY package.json pnpm-lock.yaml* ./
+
+RUN pnpm install
+
+# Copy project
+COPY . .
+
+# Expose dev server
+EXPOSE 3000
+
+# Disable telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Start development server
+CMD ["pnpm", "dev"]
