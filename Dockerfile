@@ -16,9 +16,14 @@
 # Stage 1 — Base Image
 # Common base used across stages
 # ==========================================================
-FROM node:25-slim AS base
+FROM node:25-alpine AS base
 
 WORKDIR /app
+
+# Patch OS vulnerabilities
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install pnpm globally
 RUN npm install -g pnpm@10
@@ -71,7 +76,7 @@ RUN pnpm build
 # Stage 4 — Production Runtime
 # Minimal and secure production image
 # ==========================================================
-FROM node:25-slim AS runner
+FROM node:25-alpine AS runner
 
 WORKDIR /app
 

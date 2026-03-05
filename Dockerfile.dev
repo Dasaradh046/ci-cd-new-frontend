@@ -3,7 +3,7 @@
 # Used for local development with hot reload
 # =============================================
 
-FROM node:25-slim
+FROM node:25-alpine
 
 # Enable pnpm via corepack
 RUN corepack enable
