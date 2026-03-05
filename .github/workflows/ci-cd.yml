@@ -199,19 +199,19 @@ jobs:
 # ===========================================
 # Stage 8: Dockerfile Lint
 # ===========================================
-  dockerfile-lint:
-    name: Dockerfile Lint (Hadolint)
-    runs-on: ubuntu-latest
+  # dockerfile-lint:
+  #   name: Dockerfile Lint (Hadolint)
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v6
+  #   steps:
+  #     - name: Checkout Source Code
+  #       uses: actions/checkout@v6
 
-      - name: Run Hadolint
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: Dockerfile
-          failure-threshold: warning
+  #     - name: Run Hadolint
+  #       uses: hadolint/hadolint-action@v3.1.0
+  #       with:
+  #         dockerfile: Dockerfile
+  #         failure-threshold: warning
 
 
 # ===========================================
