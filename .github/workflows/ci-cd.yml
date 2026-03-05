@@ -200,8 +200,6 @@ jobs:
 
       - name: Run Trivy Filesystem Scan
         uses: aquasecurity/trivy-action@0.34.2
-        env:
-          TRIVY_SKIP_VERSION_CHECK: true
         with:
           scan-type: fs
           scan-ref: .
@@ -213,10 +211,10 @@ jobs:
           output: trivy-fs-results.sarif
           exit-code: 1
 
-      - name: Upload Scan Results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: trivy-fs-results.sarif
+      # - name: Upload Scan Results to GitHub Security
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: trivy-fs-results.sarif
 
 
 # ===========================================
