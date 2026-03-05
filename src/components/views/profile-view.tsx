@@ -55,17 +55,17 @@ export function ProfileView() {
     resolver: zodResolver(profileSchema),
     defaultValues: { name: user?.name || '', email: user?.email || '', bio: '', location: 'San Francisco, CA', website: '', twitter: '', github: '', linkedin: '' },
   });
-  const { register, handleSubmit, formState: { errors }, watch, reset } = form;
+  const { register, handleSubmit, formState: { errors }, reset, getValues } = form;
+  const bioField = register('bio');
+  const [bioLen, setBioLen] = useState(0);
 
   const onSubmit = async (data: ProfileForm) => { setIsLoading(true); await new Promise(r => setTimeout(r, 1000)); setIsLoading(false); setIsEditing(false); toast({ title: 'Profile updated' }); };
   const handleAvatarChange = () => fileRef.current?.click();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => { if (e.target.files?.[0]) toast({ title: 'Avatar uploaded' }); };
-  const handleCancel = () => { reset(); setIsEditing(false); };
+  const handleCancel = () => { reset(); setBioLen((getValues('bio') || '').length); setIsEditing(false); };
 
   if (!user) return <ProfileSkeleton />;
   const completion = [user.name, user.email, user.avatar].filter(Boolean).length / 3 * 100;
-  const bioLen = (watch('bio') || '').length;
-
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
@@ -111,7 +111,17 @@ export function ProfileView() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Bio</Label>
-                  <Textarea {...register('bio')} disabled={!isEditing} placeholder="Tell us about yourself..." rows={3} className={cn('resize-none', !isEditing && 'bg-muted/50')} />
+                  <Textarea
+                    {...bioField}
+                    disabled={!isEditing}
+                    placeholder="Tell us about yourself..."
+                    rows={3}
+                    className={cn('resize-none', !isEditing && 'bg-muted/50')}
+                    onChange={(e) => {
+                      bioField.onChange(e);
+                      setBioLen((e.target.value || '').length);
+                    }}
+                  />
                   <div className="flex justify-between">{errors.bio && <p className="text-xs text-destructive">{errors.bio.message}</p>}<span className="text-xs text-muted-foreground ml-auto">{bioLen}/500</span></div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -6,7 +6,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useMemo } from 'react';
-import { FileText, Upload, Download, Trash2, Search, File, Image, FileCode, FileSpreadsheet, Eye, MoreHorizontal, Grid3X3, List, X, CheckSquare, Square, FileArchive, FileVideo, FileAudio, CloudUpload, ExternalLink, Music, Play } from 'lucide-react';
+import { FileText, Upload, Download, Trash2, Search, File, Image as ImageIcon, FileCode, FileSpreadsheet, Eye, MoreHorizontal, Grid3X3, List, CheckSquare, FileArchive, FileVideo, FileAudio, CloudUpload, Music, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +20,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useFetchWithFallback, useDebounce } from '@/lib/hooks';
-import { getFiles, formatFileSize, deleteFile } from '@/lib/api';
+import { getFiles, formatFileSize } from '@/lib/api';
 import { TableSkeleton, MockDataBadge } from '@/components/shared';
 import type { FileItem } from '@/lib/models';
 import { useToast } from '@/hooks/use-toast';
@@ -98,7 +98,7 @@ export function FilesView() {
 
   const getFileIcon = (type: string, size = 'lg') => {
     const cls = size === 'lg' ? 'h-10 w-10' : 'h-5 w-5';
-    if (type.startsWith('image/')) return <Image className={cn(cls, 'text-purple-500')} />;
+    if (type.startsWith('image/')) return <ImageIcon className={cn(cls, 'text-purple-500')} />;
     if (type.startsWith('video/')) return <FileVideo className={cn(cls, 'text-rose-500')} />;
     if (type.startsWith('audio/')) return <FileAudio className={cn(cls, 'text-amber-500')} />;
     if (type.includes('pdf')) return <FileText className={cn(cls, 'text-red-500')} />;

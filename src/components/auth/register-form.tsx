@@ -8,7 +8,7 @@
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Loader2, Eye, EyeOff, Shield, Check } from 'lucide-react';
@@ -75,10 +75,9 @@ function PasswordStrengthMeter({ password }: { password: string }) {
     <div className="space-y-2">
       <div className="flex items-center justify-between text-xs">
         <span className="text-muted-foreground">Password strength</span>
-        <span className={`font-medium ${
-          strength <= 2 ? 'text-destructive' : 
-          strength <= 4 ? 'text-warning' : 'text-success'
-        }`}>
+        <span className={`font-medium ${strength <= 2 ? 'text-destructive' :
+            strength <= 4 ? 'text-warning' : 'text-success'
+          }`}>
           {label}
         </span>
       </div>
@@ -108,7 +107,11 @@ export function RegisterForm() {
     },
   });
 
-  const password = form.watch('password');
+
+  const password = useWatch({
+    control: form.control,
+    name: 'password',
+  }) || '';
   const passwordChecks = {
     length: password.length >= 8,
     uppercase: /[A-Z]/.test(password),
@@ -214,11 +217,10 @@ export function RegisterForm() {
                     ].map(({ key, label }) => (
                       <div
                         key={key}
-                        className={`flex items-center gap-1 text-xs ${
-                          passwordChecks[key as keyof typeof passwordChecks]
+                        className={`flex items-center gap-1 text-xs ${passwordChecks[key as keyof typeof passwordChecks]
                             ? 'text-success'
                             : 'text-muted-foreground'
-                        }`}
+                          }`}
                       >
                         <Check className="h-3 w-3" />
                         {label}
