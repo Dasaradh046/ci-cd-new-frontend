@@ -11,6 +11,16 @@ const customJestConfig: Config = {
 
   testEnvironment: "jest-environment-jsdom",
 
+  moduleDirectories: ["node_modules", "<rootDir>/"],
+
+  clearMocks: true,
+
+  coverageProvider: "v8",
+
+  testEnvironmentOptions: {
+    url: "http://localhost:3000",
+  },
+
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },

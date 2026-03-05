@@ -18,16 +18,11 @@
 # ==========================================================
 FROM node:24-alpine AS base
 
-# Install libc compatibility (required by some node packages)
-RUN apk add --no-cache libc6-compat
-
-# Enable corepack (Node package manager manager)
-# This allows us to use pnpm without installing globally
-RUN corepack enable
-
 WORKDIR /app
 
-
+# Install required packages + enable corepack
+RUN apk add --no-cache libc6-compat=1.2.4-r3 \
+    && corepack enable
 
 # ==========================================================
 # Stage 2 — Dependencies
@@ -85,11 +80,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-# Install minimal runtime dependencies
-RUN apk add --no-cache libc6-compat
-
-# Create non-root user (security best practice)
-RUN addgroup -S nodejs -g 1001 \
+# Install runtime dependency + create user in single RUN
+RUN apk add --no-cache libc6-compat=1.2.4-r3 \
+    && addgroup -S nodejs -g 1001 \
     && adduser -S nextjs -u 1001 -G nodejs
 
 # Copy standalone Next.js server
