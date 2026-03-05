@@ -20,9 +20,8 @@ FROM node:25-slim AS base
 
 WORKDIR /app
 
-# Install required packages + enable corepack
-RUN apk add --no-cache libc6-compat \
-    && corepack enable
+# Enable corepack so pnpm works
+RUN corepack enable
 
 # ==========================================================
 # Stage 2 — Dependencies
@@ -80,10 +79,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-# Install runtime dependency + create user in single RUN
-RUN apk add --no-cache libc6-compat \
-    && addgroup -S nodejs -g 1001 \
-    && adduser -S nextjs -u 1001 -G nodejs
+# Create non-root user
+RUN groupadd --gid 1001 nodejs \
+    && useradd --uid 1001 --gid nodejs --shell /bin/bash --create-home nextjs
 
 # Copy standalone Next.js server
 COPY --from=builder /app/.next/standalone ./
