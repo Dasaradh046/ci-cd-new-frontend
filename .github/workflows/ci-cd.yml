@@ -297,10 +297,13 @@ jobs:
     needs: container-build
 
     steps:
+      - name: Set lowercase repository name
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+        
       - name: Scan Container Image
         uses: aquasecurity/trivy-action@0.34.2
         with:
-          image-ref: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          image-ref: ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
           severity: CRITICAL,HIGH
           exit-code: 1
 
@@ -334,12 +337,15 @@ jobs:
       contents: read
 
     steps:
+      - name: Set lowercase repository name
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3
 
       - name: Sign Container Image
         run: |
-          cosign sign ghcr.io/${{ github.repository }}:${{ github.sha }} --yes
+          cosign sign ghcr.io/${{ env.REPO_LC }}:${{ github.sha }} --yes
 
 
 # ===========================================
