@@ -16,7 +16,7 @@
 # Stage 1 — Base Image
 # Common base used across stages
 # ==========================================================
-FROM node:24-alpine AS base
+FROM node:25-alpine AS base
 
 WORKDIR /app
 
@@ -80,7 +80,7 @@ RUN pnpm prune --prod
 # Stage 4 — Production Runtime
 # Minimal and secure production image
 # ==========================================================
-FROM node:24-alpine AS runner
+FROM node:25-alpine AS runner
 
 WORKDIR /app
 
