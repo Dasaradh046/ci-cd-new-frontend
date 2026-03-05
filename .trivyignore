@@ -1,0 +1,7 @@
+# minimatch transitive dependency (not used directly)
+CVE-2026-26996
+CVE-2026-27903
+CVE-2026-27904
+
+# tar vulnerability not reachable in runtime
+CVE-2026-26960

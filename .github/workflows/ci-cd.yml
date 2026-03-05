@@ -305,7 +305,7 @@ jobs:
         with:
           image-ref: ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
           severity: CRITICAL,HIGH
-          ignorefile: .trivyignore.yaml
+          ignorefile: .trivyignore
           exit-code: 1
 
 
