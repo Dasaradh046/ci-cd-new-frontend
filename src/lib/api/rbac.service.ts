@@ -52,7 +52,7 @@ export async function createRole(
 export async function updateRole(
   id: string,
   data: Partial<Role>
-): Promise<FallbackResponse<ApiResponse<Role>>> {
+): Promise<FallbackResponse<ApiResponse<Role | null>>> {
   return putWithFallback(`/rbac/roles/${id}`, data, { success: true, data: null });
 }
 

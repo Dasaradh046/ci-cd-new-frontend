@@ -22,11 +22,7 @@ export function RouteGuard({
 }: RouteGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, isInitialized, isLoading, initialize, user } = useAuthStore();
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
+  const { isAuthenticated, isInitialized, isLoading, user } = useAuthStore();
 
   useEffect(() => {
     if (isInitialized && !isLoading) {

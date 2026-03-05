@@ -172,7 +172,7 @@ export function UsersView() {
     setSheetOpen(false);
   };
 
-  const timeAgo = (date: string | null) => {
+  const timeAgo = (date?: string | null) => {
     if (!date) return 'Never';
     const diff = Date.now() - new Date(date).getTime();
     const mins = Math.floor(diff / 60000);
@@ -384,7 +384,7 @@ function UserListItem({
   onEdit: (u: User) => void;
   onToggleStatus: (u: User) => void;
   onDelete: (u: User) => void;
-  timeAgo: (d: string | null) => string;
+  timeAgo: (d?: string | null) => string;
 }) {
   const statusConfig = STATUS_CONFIG[user.status];
   const roleColor = ROLE_COLORS[user.role.name] || 'bg-muted';
@@ -457,7 +457,7 @@ function UserCard({
   onEdit: (u: User) => void;
   onToggleStatus: (u: User) => void;
   onDelete: (u: User) => void;
-  timeAgo: (d: string | null) => string;
+  timeAgo: (d?: string | null) => string;
 }) {
   const statusConfig = STATUS_CONFIG[user.status];
   const roleColor = ROLE_COLORS[user.role.name] || 'bg-muted';

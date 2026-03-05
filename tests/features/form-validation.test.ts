@@ -132,15 +132,15 @@ const validatePasswordStrength = (password: string): PasswordStrength => {
   if (/[^A-Za-z0-9]/.test(password)) score++;
   else feedback.push('Add special characters');
 
-  // Check for common patterns
-  const commonPatterns = ['password', '123456', 'qwerty', 'abc123', 'admin'];
-  if (commonPatterns.some((p) => password.toLowerCase().includes(p))) {
+  // Check for common weak passwords
+  const commonPasswords = ['password', 'password123', '123456', 'qwerty', 'abc123', 'admin'];
+  if (commonPasswords.includes(password.toLowerCase())) {
     score = Math.max(0, score - 2);
     feedback.push('Avoid common patterns');
   }
 
   const label: PasswordStrength['label'] =
-    score <= 2 ? 'weak' : score <= 4 ? 'fair' : score <= 6 ? 'good' : 'strong';
+    score <= 2 ? 'weak' : score <= 4 ? 'fair' : score <= 5 ? 'good' : 'strong';
 
   return { score, label, feedback };
 };
@@ -154,8 +154,8 @@ const isValidPhoneNumber = (phone: string): boolean => {
 // URL validation
 const isValidUrl = (url: string): boolean => {
   try {
-    new URL(url);
-    return true;
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
   } catch {
     return false;
   }
@@ -190,7 +190,8 @@ const sanitizeHtml = (html: string): string => {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;');
 };
 
 describe('Field Validation', () => {

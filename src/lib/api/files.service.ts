@@ -117,7 +117,7 @@ export async function deleteFile(
 export async function toggleFilePublic(
   id: string,
   isPublic: boolean
-): Promise<FallbackResponse<ApiResponse<FileItem>>> {
+): Promise<FallbackResponse<ApiResponse<FileItem | null>>> {
   return postWithFallback(
     `/files/${id}/visibility`,
     'files.json',

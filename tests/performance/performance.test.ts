@@ -21,20 +21,20 @@ const measureSyncTime = <T>(fn: () => T): { result: T; duration: number } => {
 };
 
 // Memoization for performance optimization
-const memoize = <T extends (...args: unknown[]) => unknown>(
-  fn: T,
-  getKey: (...args: Parameters<T>) => string = (...args) => JSON.stringify(args)
-): T => {
-  const cache = new Map<string, ReturnType<T>>();
-  return ((...args: Parameters<T>) => {
+const memoize = <TArgs extends unknown[], TResult>(
+  fn: (...args: TArgs) => TResult,
+  getKey: (...args: TArgs) => string = (...args) => JSON.stringify(args)
+): ((...args: TArgs) => TResult) => {
+  const cache = new Map<string, TResult>();
+  return (...args: TArgs) => {
     const key = getKey(...args);
     if (cache.has(key)) {
-      return cache.get(key);
+      return cache.get(key) as TResult;
     }
-    const result = fn(...args) as ReturnType<T>;
+    const result = fn(...args);
     cache.set(key, result);
     return result;
-  }) as T;
+  };
 };
 
 // Debounce utility

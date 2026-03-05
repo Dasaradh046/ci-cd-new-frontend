@@ -15,12 +15,14 @@ interface UseFetchWithFallbackResult<T> {
 
 export function useFetchWithFallback<T>(
   fetchFn: () => Promise<{ data: T; isMock: boolean; error?: string }>,
-  deps: unknown[] = []
+  depsOrFallback: unknown[] | T = []
 ): UseFetchWithFallbackResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMock, setIsMock] = useState(false);
+  const deps = Array.isArray(depsOrFallback) ? depsOrFallback : [];
+  const fallbackData = Array.isArray(depsOrFallback) ? null : depsOrFallback;
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
@@ -35,6 +37,10 @@ export function useFetchWithFallback<T>(
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      if (fallbackData) {
+        setData(fallbackData);
+        setIsMock(true);
+      }
     } finally {
       setIsLoading(false);
     }

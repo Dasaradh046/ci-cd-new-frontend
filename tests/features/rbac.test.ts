@@ -70,6 +70,10 @@ const isAdmin = (user: User | null): boolean => {
 };
 
 const canManageUser = (manager: User, target: User): boolean => {
+  if (ROLE_HIERARCHY[manager.role.name] < ROLE_HIERARCHY.MANAGER) {
+    return false;
+  }
+
   // Cannot manage users with higher or equal role level
   if (ROLE_HIERARCHY[manager.role.name] <= ROLE_HIERARCHY[target.role.name]) {
     return false;

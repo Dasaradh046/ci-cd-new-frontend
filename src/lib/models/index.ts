@@ -7,38 +7,40 @@
 
 export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'MANAGER' | 'USER' | 'GUEST';
 
-export type UserStatus = 'active' | 'suspended' | 'pending_verification';
+export type UserStatus = 'active' | 'suspended' | 'pending_verification' | 'ACTIVE' | 'SUSPENDED' | 'PENDING_VERIFICATION';
 
 export interface Permission {
   id: string;
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
   resource: string;
-  action: 'create' | 'read' | 'update' | 'delete' | 'assign';
+  action: 'create' | 'read' | 'update' | 'delete' | 'assign' | 'view' | 'edit' | 'manage';
 }
 
 export interface Role {
   id: string;
   name: UserRole;
   description: string;
+  displayName?: string;
+  isSystem?: boolean;
   permissions: Permission[];
   userCount?: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface User {
   id: string;
   email: string;
   name: string;
-  avatar?: string;
+  avatar?: string | null;
   bio?: string;
   role: Role;
   status: UserStatus;
   emailVerified: boolean;
-  lastLoginAt?: string;
+  lastLoginAt?: string | null;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface AuthState {
@@ -79,10 +81,11 @@ export interface FileItem {
   type: string;
   size: number;
   url: string;
+  thumbnail?: string | null;
   thumbnailUrl?: string;
   uploadedAt: string;
-  updatedAt: string;
-  ownerId: string;
+  updatedAt?: string;
+  ownerId?: string;
   isPublic: boolean;
 }
 
@@ -170,9 +173,9 @@ export interface DashboardStats {
 
 export interface ActivityItem {
   id: string;
-  type: 'user_login' | 'file_upload' | 'user_created' | 'role_changed';
+  type: 'user_login' | 'file_upload' | 'user_created' | 'role_changed' | 'security_scan' | string;
   description: string;
-  userId: string;
+  userId?: string;
   userName: string;
   timestamp: string;
 }

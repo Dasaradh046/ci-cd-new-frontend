@@ -32,16 +32,16 @@ type SortField = 'name' | 'size' | 'uploadedAt';
 interface UploadingFile { file: File; progress: number; status: 'uploading' | 'success' | 'error'; }
 
 const MOCK_FILES: FileItem[] = [
-  { id: '1', name: 'project-proposal.pdf', type: 'application/pdf', size: 2457600, uploadedAt: '2024-03-01T10:30:00Z', isPublic: true, url: '/files/project-proposal.pdf', thumbnail: null },
-  { id: '2', name: 'design-mockups.png', type: 'image/png', size: 1572864, uploadedAt: '2024-03-02T14:15:00Z', isPublic: false, url: '/files/design-mockups.png', thumbnail: '/placeholder.jpg' },
-  { id: '3', name: 'financial-report.xlsx', type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', size: 524288, uploadedAt: '2024-03-02T09:00:00Z', isPublic: false, url: '/files/financial-report.xlsx', thumbnail: null },
-  { id: '4', name: 'api-config.yaml', type: 'application/x-yaml', size: 12288, uploadedAt: '2024-03-03T16:45:00Z', isPublic: true, url: '/files/api-config.yaml', thumbnail: null },
-  { id: '5', name: 'presentation.pptx', type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', size: 3145728, uploadedAt: '2024-03-03T11:20:00Z', isPublic: true, url: '/files/presentation.pptx', thumbnail: null },
-  { id: '6', name: 'team-photo.jpg', type: 'image/jpeg', size: 2097152, uploadedAt: '2024-03-04T08:00:00Z', isPublic: true, url: '/files/team-photo.jpg', thumbnail: '/placeholder.jpg' },
-  { id: '7', name: 'source-code.zip', type: 'application/zip', size: 10485760, uploadedAt: '2024-03-04T13:30:00Z', isPublic: false, url: '/files/source-code.zip', thumbnail: null },
-  { id: '8', name: 'meeting-recording.mp4', type: 'video/mp4', size: 52428800, uploadedAt: '2024-03-04T15:00:00Z', isPublic: false, url: '/files/meeting-recording.mp4', thumbnail: null },
-  { id: '9', name: 'product-logo.svg', type: 'image/svg+xml', size: 8192, uploadedAt: '2024-03-04T16:00:00Z', isPublic: true, url: '/files/product-logo.svg', thumbnail: null },
-  { id: '10', name: 'podcast-intro.mp3', type: 'audio/mpeg', size: 5242880, uploadedAt: '2024-03-04T17:00:00Z', isPublic: true, url: '/files/podcast-intro.mp3', thumbnail: null },
+  { id: '1', name: 'project-proposal.pdf', type: 'application/pdf', size: 2457600, uploadedAt: '2024-03-01T10:30:00Z', isPublic: true, url: '/files/project-proposal.pdf', thumbnailUrl: undefined },
+  { id: '2', name: 'design-mockups.png', type: 'image/png', size: 1572864, uploadedAt: '2024-03-02T14:15:00Z', isPublic: false, url: '/files/design-mockups.png', thumbnailUrl: '/placeholder.jpg' },
+  { id: '3', name: 'financial-report.xlsx', type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', size: 524288, uploadedAt: '2024-03-02T09:00:00Z', isPublic: false, url: '/files/financial-report.xlsx', thumbnailUrl: undefined },
+  { id: '4', name: 'api-config.yaml', type: 'application/x-yaml', size: 12288, uploadedAt: '2024-03-03T16:45:00Z', isPublic: true, url: '/files/api-config.yaml', thumbnailUrl: undefined },
+  { id: '5', name: 'presentation.pptx', type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', size: 3145728, uploadedAt: '2024-03-03T11:20:00Z', isPublic: true, url: '/files/presentation.pptx', thumbnailUrl: undefined },
+  { id: '6', name: 'team-photo.jpg', type: 'image/jpeg', size: 2097152, uploadedAt: '2024-03-04T08:00:00Z', isPublic: true, url: '/files/team-photo.jpg', thumbnailUrl: '/placeholder.jpg' },
+  { id: '7', name: 'source-code.zip', type: 'application/zip', size: 10485760, uploadedAt: '2024-03-04T13:30:00Z', isPublic: false, url: '/files/source-code.zip', thumbnailUrl: undefined },
+  { id: '8', name: 'meeting-recording.mp4', type: 'video/mp4', size: 52428800, uploadedAt: '2024-03-04T15:00:00Z', isPublic: false, url: '/files/meeting-recording.mp4', thumbnailUrl: undefined },
+  { id: '9', name: 'product-logo.svg', type: 'image/svg+xml', size: 8192, uploadedAt: '2024-03-04T16:00:00Z', isPublic: true, url: '/files/product-logo.svg', thumbnailUrl: undefined },
+  { id: '10', name: 'podcast-intro.mp3', type: 'audio/mpeg', size: 5242880, uploadedAt: '2024-03-04T17:00:00Z', isPublic: true, url: '/files/podcast-intro.mp3', thumbnailUrl: undefined },
 ];
 
 export function FilesView() {
@@ -143,7 +143,7 @@ export function FilesView() {
           <div className="flex items-center gap-2"><CheckSquare className="h-4 w-4 text-primary" /><span className="font-medium text-sm">{selectedFiles.size} selected</span></div>
           <Separator orientation="vertical" className="h-5" />
           <Button variant="outline" size="sm" onClick={handleMultiDownload}><FileArchive className="h-4 w-4 mr-2" />Download ZIP</Button>
-          <Button variant="destructive" size="sm" onClick={() => {}}><Trash2 className="h-4 w-4 mr-2" />Delete</Button>
+          <Button variant="destructive" size="sm" onClick={() => { }}><Trash2 className="h-4 w-4 mr-2" />Delete</Button>
           <div className="flex-1" /><Button variant="ghost" size="sm" onClick={() => setSelectedFiles(new Set())}>Clear</Button>
         </div>
       )}
@@ -155,7 +155,7 @@ export function FilesView() {
             {filteredFiles.map((file: FileItem) => (
               <Card key={file.id} className={cn('group overflow-hidden transition-all cursor-pointer hover:shadow-md', selectedFiles.has(file.id) && 'ring-2 ring-primary')} onClick={() => setPreviewFile(file)}>
                 <div className="relative h-28 bg-muted/50 flex items-center justify-center">
-                  {file.type.startsWith('image/') ? <img src={file.thumbnail || '/placeholder.jpg'} alt={file.name || 'File preview'} className="w-full h-full object-cover group-hover:scale-105 transition-transform" /> : getFileIcon(file.type)}
+                  {file.type.startsWith('image/') ? <img src={file.thumbnailUrl || '/placeholder.jpg'} alt={file.name || 'File preview'} className="w-full h-full object-cover group-hover:scale-105 transition-transform" /> : getFileIcon(file.type)}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100 gap-2">
                     <Button size="icon" variant="secondary" className="h-9 w-9 rounded-full bg-white/90 hover:bg-white" onClick={e => { e.stopPropagation(); setPreviewFile(file); }}><Eye className="h-4 w-4" /></Button>
                     <Button size="icon" variant="secondary" className="h-9 w-9 rounded-full bg-white/90 hover:bg-white" onClick={e => { e.stopPropagation(); handleDownload(file); }}><Download className="h-4 w-4" /></Button>
@@ -228,7 +228,7 @@ export function FilesView() {
       <Dialog open={!!previewFile} onOpenChange={() => setPreviewFile(null)}>
         <DialogContent className="max-w-3xl max-h-[85vh] p-0">
           <DialogHeader className="p-4 border-b"><DialogTitle className="flex items-center gap-3">{previewFile && <>{getFileIcon(previewFile.type, 'sm')}<div><span>{previewFile.name}</span><p className="text-sm font-normal text-muted-foreground">{formatFileSize(previewFile.size)} • {getFileTypeLabel(previewFile.type)}</p></div></>}</DialogTitle></DialogHeader>
-          <div className="p-4">{previewFile?.type.startsWith('image/') ? <div className="bg-muted rounded-lg p-8 flex items-center justify-center min-h-[200px]"><img src={previewFile.thumbnail || '/placeholder.jpg'} alt={previewFile.name || 'File preview'} className="max-w-full max-h-[50vh] object-contain" /></div> : previewFile?.type.startsWith('video/') ? <div className="bg-black rounded-lg h-[50vh] flex items-center justify-center"><Play className="h-16 w-16 text-white/50" /></div> : previewFile?.type.startsWith('audio/') ? <div className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-lg h-[30vh] flex flex-col items-center justify-center"><Music className="h-16 w-16 text-amber-500 mb-4" /><p className="font-medium">{previewFile.name}</p></div> : <div className="bg-muted rounded-lg p-8 text-center">{previewFile && getFileIcon(previewFile.type)}<p className="mt-4 font-medium">{previewFile?.name}</p><p className="text-sm text-muted-foreground mt-1">Preview not available</p></div>}</div>
+          <div className="p-4">{previewFile?.type.startsWith('image/') ? <div className="bg-muted rounded-lg p-8 flex items-center justify-center min-h-[200px]"><img src={previewFile.thumbnailUrl || '/placeholder.jpg'} alt={previewFile.name || 'File preview'} className="max-w-full max-h-[50vh] object-contain" /></div> : previewFile?.type.startsWith('video/') ? <div className="bg-black rounded-lg h-[50vh] flex items-center justify-center"><Play className="h-16 w-16 text-white/50" /></div> : previewFile?.type.startsWith('audio/') ? <div className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-lg h-[30vh] flex flex-col items-center justify-center"><Music className="h-16 w-16 text-amber-500 mb-4" /><p className="font-medium">{previewFile.name}</p></div> : <div className="bg-muted rounded-lg p-8 text-center">{previewFile && getFileIcon(previewFile.type)}<p className="mt-4 font-medium">{previewFile?.name}</p><p className="text-sm text-muted-foreground mt-1">Preview not available</p></div>}</div>
           <div className="flex items-center justify-between p-4 border-t bg-muted/30"><p className="text-sm text-muted-foreground">Uploaded {previewFile && new Date(previewFile.uploadedAt).toLocaleDateString()}</p><div className="flex gap-2"><Button variant="outline" onClick={() => setPreviewFile(null)}>Close</Button>{previewFile && <Button onClick={() => { handleDownload(previewFile); setPreviewFile(null); }}><Download className="h-4 w-4 mr-2" />Download</Button>}</div></div>
         </DialogContent>
       </Dialog>

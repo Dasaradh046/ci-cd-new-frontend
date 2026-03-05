@@ -89,7 +89,7 @@ export async function deleteUser(
 export async function updateUserStatus(
   id: string,
   status: UserStatus
-): Promise<FallbackResponse<ApiResponse<User>>> {
+): Promise<FallbackResponse<ApiResponse<User | null>>> {
   return putWithFallback(
     `/users/${id}/status`,
     { status },
@@ -123,6 +123,6 @@ export async function getProfile(): Promise<FallbackResponse<ApiResponse<User>>>
  */
 export async function updateProfile(
   data: Partial<Pick<User, 'name' | 'bio' | 'avatar'>>
-): Promise<FallbackResponse<ApiResponse<User>>> {
+): Promise<FallbackResponse<ApiResponse<User | null>>> {
   return putWithFallback('/users/profile', data, { success: true, data: null });
 }
