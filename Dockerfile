@@ -21,9 +21,7 @@ FROM node:25-alpine AS base
 WORKDIR /app
 
 # Patch OS vulnerabilities
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update && apk upgrade
 
 # Install pnpm globally
 RUN npm install -g pnpm@10
@@ -87,8 +85,8 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 # Create non-root user
-RUN groupadd -r nodejs -g 1001 \
-    && useradd -r -g nodejs -u 1001 nextjs
+RUN addgroup -g 1001 -S nodejs \
+    && adduser -S nextjs -u 1001 -G nodejs
 
 # Copy standalone Next.js server
 COPY --from=builder /app/.next/standalone ./
