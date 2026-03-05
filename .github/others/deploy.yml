@@ -1,0 +1,30 @@
+name: Deployment Pipeline
+
+on:
+  workflow_run:
+    workflows: ["Container Pipeline"]
+    types:
+      - completed
+
+jobs:
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+
+    environment: staging
+
+    steps:
+      - name: Deploy to staging
+        run: echo "Deploying to staging..."
+
+
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    environment: production
+
+    steps:
+      - name: Deploy to production
+        run: echo "Deploying to production..."

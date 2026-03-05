@@ -327,7 +327,7 @@ jobs:
           trivyignores: ./.trivyignore
           format: sarif
           output: trivy-image-results.sarif
-          exit-code: 0
+          exit-code: 1
 
       - name: Debug vulnerabilities
         run: |

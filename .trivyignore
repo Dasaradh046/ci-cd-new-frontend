@@ -6,6 +6,11 @@ CVE-2026-27904
 # tar vulnerability not reachable in runtime
 CVE-2026-26960
 
+# GHSA-qffp-2rhf-9h96
+# tar vulnerability inside npm dependency
+# not used in runtime, only used by npm package manager
+GHSA-qffp-2rhf-9h96
+
 # Ignore known false positives
 CVE-2023-12345
 CVE-2022-56789
