@@ -21,7 +21,7 @@ FROM node:25-alpine AS base
 WORKDIR /app
 
 # Install required packages + enable corepack
-RUN apk add --no-cache libc6-compat=1.2.4-r3 \
+RUN apk add --no-cache libc6-compat \
     && corepack enable
 
 # ==========================================================
@@ -81,7 +81,7 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 # Install runtime dependency + create user in single RUN
-RUN apk add --no-cache libc6-compat=1.2.4-r3 \
+RUN apk add --no-cache libc6-compat \
     && addgroup -S nodejs -g 1001 \
     && adduser -S nextjs -u 1001 -G nodejs
 
