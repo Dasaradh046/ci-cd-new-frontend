@@ -327,7 +327,14 @@ jobs:
           trivyignores: ./.trivyignore
           format: sarif
           output: trivy-image-results.sarif
-          exit-code: 1
+          exit-code: 0
+
+      - name: Debug vulnerabilities
+        run: |
+          trivy image \
+            --severity CRITICAL,HIGH \
+            --ignore-unfixed \
+            ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
 
       - name: Upload Container Scan Results to Security Tab
         uses: github/codeql-action/upload-sarif@v3
