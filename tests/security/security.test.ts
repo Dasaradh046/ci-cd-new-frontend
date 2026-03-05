@@ -18,11 +18,14 @@ const sanitizeInput = (input: string): string => {
 const sanitizeHtml = (html: string): string => {
   const allowedTags = ['b', 'i', 'u', 'strong', 'em', 'p', 'br'];
 
-  // Remove dangerous tags with their content
-  html = html.replace(
-    /<(script|iframe|object|embed|style)[^>]*>[\s\S]*?<\/\1>/gi,
-    ''
-  );
+  // Remove dangerous tags with their content (repeat until stable)
+  const dangerousTagRegex = /<(script|iframe|object|embed|style)[^>]*>[\s\S]*?<\/\1>/gi;
+
+  let previousHtml: string;
+  do {
+    previousHtml = html;
+    html = html.replace(dangerousTagRegex, '');
+  } while (html !== previousHtml);
 
   // Remove disallowed tags but keep their content
   const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
