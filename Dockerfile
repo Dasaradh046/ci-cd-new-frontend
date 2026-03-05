@@ -20,14 +20,16 @@ FROM node:25-slim AS base
 
 WORKDIR /app
 
-# Enable corepack so pnpm works
-RUN corepack enable
+# Install pnpm globally
+RUN npm install -g pnpm@10
 
 # ==========================================================
 # Stage 2 — Dependencies
 # Install node modules with caching
 # ==========================================================
 FROM base AS deps
+
+WORKDIR /app
 
 # Copy only dependency files first (better caching)
 COPY package.json pnpm-lock.yaml* ./
@@ -80,8 +82,8 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 # Create non-root user
-RUN groupadd --gid 1001 nodejs \
-    && useradd --uid 1001 --gid nodejs --shell /bin/bash --create-home nextjs
+RUN groupadd -r nodejs -g 1001 \
+    && useradd -r -g nodejs -u 1001 nextjs
 
 # Copy standalone Next.js server
 COPY --from=builder /app/.next/standalone ./
