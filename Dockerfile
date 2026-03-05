@@ -16,7 +16,7 @@
 # Stage 1 — Base Image
 # Common base used across stages
 # ==========================================================
-FROM node:25-alpine AS base
+FROM node:25-slim AS base
 
 WORKDIR /app
 
@@ -70,7 +70,7 @@ RUN pnpm build
 # Stage 4 — Production Runtime
 # Minimal and secure production image
 # ==========================================================
-FROM node:25-alpine AS runner
+FROM node:25-slim AS runner
 
 WORKDIR /app
 
