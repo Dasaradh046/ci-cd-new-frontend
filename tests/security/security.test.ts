@@ -49,6 +49,9 @@ const isValidRedirectUrl = (url: string): boolean => {
   if (url.startsWith('data:')) {
     return false;
   }
+  if (url.startsWith('vbscript:')) {
+    return false;
+  }
   return url.startsWith('/');
 };
 
