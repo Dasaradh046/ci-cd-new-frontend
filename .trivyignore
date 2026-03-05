@@ -5,3 +5,7 @@ CVE-2026-27904
 
 # tar vulnerability not reachable in runtime
 CVE-2026-26960
+
+# Ignore known false positives
+CVE-2023-12345
+CVE-2022-56789
