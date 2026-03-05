@@ -259,6 +259,10 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v6
