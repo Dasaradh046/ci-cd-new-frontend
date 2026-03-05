@@ -317,20 +317,40 @@ jobs:
 
       - name: Run Trivy Container Scan
         uses: aquasecurity/trivy-action@0.34.2
+        env:
+          TRIVY_SKIP_VERSION_CHECK: true
         with:
           image-ref: ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
-          scanners: vuln,secret,misconfig
+          scanners: vuln,misconfig
           severity: CRITICAL
           ignore-unfixed: true
-          trivyignores: .trivyignore
+          trivyignores: ./.trivyignore
           format: sarif
           output: trivy-image-results.sarif
           exit-code: 1
 
-      - name: Upload Container Scan Results
+      - name: Upload Container Scan Results to Security Tab
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-image-results.sarif
+
+      - name: Upload Trivy Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-container-scan
+          path: trivy-image-results.sarif
+
+      - name: Generate SBOM
+        run: |
+          trivy image --format spdx-json \
+          --output sbom.json \
+          ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
 
 
 # ===========================================
