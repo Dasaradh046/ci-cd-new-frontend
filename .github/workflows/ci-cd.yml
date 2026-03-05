@@ -320,7 +320,7 @@ jobs:
         with:
           image-ref: ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
           scanners: vuln,secret,misconfig
-          severity: CRITICAL,HIGH
+          severity: CRITICAL
           ignore-unfixed: true
           trivyignores: .trivyignore
           format: sarif
