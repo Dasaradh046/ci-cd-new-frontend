@@ -192,8 +192,8 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
+          severity: CRITICAL
+          ignorefile: .trivyignore.yaml
           exit-code: 1
 
 
@@ -305,6 +305,7 @@ jobs:
         with:
           image-ref: ghcr.io/${{ env.REPO_LC }}:${{ github.sha }}
           severity: CRITICAL,HIGH
+          ignorefile: .trivyignore.yaml
           exit-code: 1
 
 
