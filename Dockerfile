@@ -16,15 +16,18 @@
 # Stage 1 — Base Image
 # Common base used across stages
 # ==========================================================
-FROM node:25-alpine AS base
+FROM node:22-alpine AS base
 
 WORKDIR /app
 
 # Patch OS vulnerabilities
-RUN apk update && apk upgrade
+RUN apk add --no-cache libc6-compat
 
 # Install pnpm globally
 RUN npm install -g pnpm@10
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
 # ==========================================================
 # Stage 2 — Dependencies
@@ -68,13 +71,16 @@ ENV NODE_ENV=production
 # output: "standalone"
 RUN pnpm build
 
+# Remove devDependencies to reduce image size
+RUN pnpm prune --prod
+
 
 
 # ==========================================================
 # Stage 4 — Production Runtime
 # Minimal and secure production image
 # ==========================================================
-FROM node:25-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 
@@ -84,8 +90,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
+# Install minimal runtime packages
+RUN apk add --no-cache libc6-compat
+
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs \
+RUN addgroup -S nodejs -g 1001 \
     && adduser -S nextjs -u 1001 -G nodejs
 
 # Copy standalone Next.js server
